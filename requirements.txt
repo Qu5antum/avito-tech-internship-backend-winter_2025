@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+sqlalchemy
+environs
+asyncpg
+python-multipart
+PyJWT
