@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.routers.user_router import router as user_router
+from src.routers.admin_router import router as admin_router
+from src.routers.shoping_router import router as shoping_router
 from src.config.settings import settings
 from src.database.db import init_models
 import asyncio
@@ -21,6 +23,9 @@ app.add_middleware(
 )
 
 app.include_router(user_router)
+app.include_router(shoping_router)
+app.include_router(admin_router)
+
 
 if __name__ == "__main__":
     asyncio.run(init_models())

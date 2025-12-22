@@ -4,7 +4,7 @@ from src.models.models import Personel
 from src.schemas.schemas import UserCreate
 from sqlalchemy import select
 
-async def create_new_user(session: AsyncSession, user: UserCreate):
+async def create_new_user(session: AsyncSession, user: str):
     query = select(Personel).where(Personel.username == user.username)
     result = await session.execute(query)
     existing_user = result.scalar_one_or_none()
@@ -18,7 +18,7 @@ async def create_new_user(session: AsyncSession, user: UserCreate):
     new_user = Personel(
         username = user.username,
         password = user.password,
-        coin = user.coin
+        coin = 1000
     )
 
     session.add(new_user)

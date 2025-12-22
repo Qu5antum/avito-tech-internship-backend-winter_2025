@@ -7,7 +7,7 @@ import datetime
 from src.database.db import get_session, AsyncSession
 from src.models.models import Personel
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/login")
 
 async def create_jwt_token(data):
     to_encode = data.copy()
@@ -34,8 +34,9 @@ async def auth_user(credents: OAuth2PasswordRequestForm, session: AsyncSession =
             detail="Неавторизован."
         )
     
-    token = await create_jwt_token({"sub": personel.id})
-    return {"token": token}
+    token = await create_jwt_token({"sub": str(personel.id)})
+    return {"access_token": token,
+            "token_type": "bearer"}
     
 
 async def get_user_from_token(token: str = Depends(oauth2_scheme)):
@@ -44,11 +45,12 @@ async def get_user_from_token(token: str = Depends(oauth2_scheme)):
         user_id: int = playload.get("sub")
         if user_id is None:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Недействительный токен.")
-        return user_id
+        return int(user_id)
     except jwt.ExpiredSignatureError:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Срок действия токена истек.")
     except jwt.InvalidTokenError:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Недействительный токен.")
+    
 
 async def get_current_user(user_id: int = Depends(get_user_from_token), session: AsyncSession = Depends(get_session)):
     user = await session.get(Personel, user_id)

@@ -1,4 +1,5 @@
-from sqlalchemy import String, Integer, Column
+from sqlalchemy import String, Integer, Column, JSON
+from sqlalchemy.orm import relationship
 from src.database.db import Base
 
 class Personel(Base):
@@ -8,6 +9,8 @@ class Personel(Base):
     username = Column(String, unique=True)
     password = Column(String)
     coin = Column(Integer)
+    merch_list = Column(JSON)
+
 
 class Merch(Base):
     __tablename__ = "merchs"
