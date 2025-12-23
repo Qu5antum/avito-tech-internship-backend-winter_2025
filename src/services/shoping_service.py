@@ -6,7 +6,7 @@ from sqlalchemy import select
 from src.security.security import get_current_user
 from sqlalchemy.orm import selectinload
 
-async def buy_merch(session: AsyncSession, user_id: Personel, merch_name: str):
+async def buy_merch(session: AsyncSession, user_id: int, merch_name: str):
     user_query = (
         select(Personel)
         .where(Personel.id == user_id)
