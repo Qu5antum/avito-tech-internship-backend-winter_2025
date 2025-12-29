@@ -6,15 +6,22 @@ from src.models.models import Personel, Transaction
 from src.security.security import get_current_user
 
 router = APIRouter(
-    prefix="/sends",
+    prefix="/send",
     tags=["sends"]
 )
 
-@router.post("", status_code=status.HTTP_200_OK)
+@router.post("/coin", status_code=status.HTTP_200_OK)
 async def send_coins_to_user(
     amount: int,
     receiver: str,
+    desccription: str | None = None,
     sender: Personel = Depends(get_current_user),
     session: AsyncSession = Depends(get_session)
 ):
-    return await send_coins(session=session, sender_id=sender.id, receiver_username=receiver, amount=amount)
+    return await send_coins(
+        session=session, 
+        sender_id=sender.id, 
+        receiver_username=receiver, 
+        amount=amount, 
+        description=desccription
+    )

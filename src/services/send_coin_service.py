@@ -1,11 +1,18 @@
 from fastapi import HTTPException, status, Depends
+from sqlalchemy.orm import selectinload
 from src.database.db import AsyncSession
 from src.models.models import Transaction, Personel
 from sqlalchemy import select
 from src.schemas.schemas import TransactionCreate
 
-async def send_coins(session: AsyncSession, sender_id: int, receiver_username: str, amount: int):
 
+async def send_coins(
+        session: AsyncSession,
+        sender_id: int,
+        receiver_username: str,
+        amount: int,
+        description: str
+):
     sender = await session.get(Personel, sender_id)
 
     query = select(Personel).where(Personel.username == receiver_username)
@@ -32,7 +39,7 @@ async def send_coins(session: AsyncSession, sender_id: int, receiver_username: s
         sender = sender,
         receiver = receiver,
         amount = amount,
-        description = f"Перевод от {sender.username} пользователю {receiver.username}"
+        description = description
     )
 
     session.add(sending)
@@ -41,7 +48,7 @@ async def send_coins(session: AsyncSession, sender_id: int, receiver_username: s
 
     return sending
 
-# реализовать функцию для того чтобы отслеживать пользователи могли отслеживать свои транзакции
+
 
 
     

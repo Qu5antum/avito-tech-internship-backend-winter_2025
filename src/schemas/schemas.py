@@ -32,18 +32,20 @@ class TransactionCreate(BaseModel):
     amount: int
     description: Optional[str] = None
 
-    @field_validator("amount")
-    def check_amout(cls, amount):
-        if amount <= 0:
-            raise ValueError("Количество монет не может быть равно меньше или равно нулю.")
-        return amount
 
-class TransactionResponse(BaseModel):
-    id: int
-    from_user: Optional[str]
-    to_user: Optional[str]
+class TransactionResponse(BaseModel): 
+    to_user: str | None 
     amount: int
-    description: Optional[str]
+    description: str | None
+    created_at: datetime.datetime
+
+    class Config:
+        from_attributes = True
+
+class IncomingTransactionResponce(BaseModel):
+    from_user: str | None
+    amount: int
+    description: str | None
     created_at: datetime.datetime
 
     class Config:
